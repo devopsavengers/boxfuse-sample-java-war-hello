@@ -52,7 +52,7 @@ pipeline {
                 deployToadmin('44.223.68.158', 'admin', 'admin', 'http://44.223.68.158:8080/manager/text', '/boxfuse-sample-java-war-hello', 'Prod')
                 
                 // Send Slack notification
-                slackSend(channel: '7-30am-cloud-devops-batch', message: "Deployment to PROD has been approved by manager.")
+                slackSend(channel: 'devops', message: "Deployment to PROD has been approved by manager.")
             }
         }
     }
