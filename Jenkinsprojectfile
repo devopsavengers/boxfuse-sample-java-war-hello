@@ -30,7 +30,7 @@ pipeline {
                 expression { params.BRANCH_NAME == 'fe/dev' }
             }
             steps {
-                deployToadmin('3.91.64.127', 'admin', 'admin', 'http://3.91.64.127:8080/manager/text', '/boxfuse-sample-java-war-hello', 'Dev')
+                deployToTomcat('3.91.64.127', 'admin', 'admin', 'http://3.91.64.127:8080/manager/text', '/boxfuse-sample-java-war-hello', 'Dev')
             }
         }
         stage("Deploy to QA") {
@@ -38,7 +38,7 @@ pipeline {
                 expression { params.BRANCH_NAME == 'fe/qa' }
             }
             steps {
-                deployToadmin('100.27.215.78', 'admin', 'admin', 'http://100.27.215.78:8080/manager/text', '/boxfuse-sample-java-war-hello', 'QA')
+                deployToTomcat('100.27.215.78', 'admin', 'admin', 'http://100.27.215.78:8080/manager/text', '/boxfuse-sample-java-war-hello', 'QA')
             }
         }
         stage("Deploy to Prod") {
@@ -49,7 +49,7 @@ pipeline {
                 input(message: "Do you want to proceed to PROD?", ok: "Proceed") // Approval step
 
                 // Deploy to PROD server after approval
-                deployToadmin('44.223.68.158', 'admin', 'admin', 'http://44.223.68.158:8080/manager/text', '/boxfuse-sample-java-war-hello', 'Prod')
+                deployToTomcat('44.223.68.158', 'admin', 'admin', 'http://44.223.68.158:8080/manager/text', '/boxfuse-sample-java-war-hello', 'Prod')
                 
                 // Send Slack notification
                 slackSend(channel: 'devops', message: "Deployment to PROD has been approved by manager.")
