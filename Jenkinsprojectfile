@@ -9,7 +9,7 @@ pipeline {
                 script {
                     // Checkout the specified branch
                     def branchName = params.BRANCH_NAME
-                    checkout([$class: 'GitSCM', branches: [[name: branchName]], userRemoteConfigs: [[url: 'https://github.com/RAJANI9/boxfuse-sample-java-war-hello.git']]])
+                    checkout([$class: 'GitSCM', branches: [[name: branchName]], userRemoteConfigs: [[url: 'https://github.com/devopsavengers/boxfuse-sample-java-war-hello.git']]])
                 }
             }
          }
@@ -30,7 +30,7 @@ pipeline {
                 expression { params.BRANCH_NAME == 'fe/dev' }
             }
             steps {
-                deployToTomcat('43.205.238.180', 'tomcat', 'tomcat', 'http://43.205.238.180:8080/manager/text', '/boxfuse-sample-java-war-hello', 'Dev')
+                deployToadmin('3.91.64.127', 'admin', 'admin', 'http://3.91.64.127:8080/manager/text', '/boxfuse-sample-java-war-hello', 'Dev')
             }
         }
         stage("Deploy to QA") {
@@ -38,7 +38,7 @@ pipeline {
                 expression { params.BRANCH_NAME == 'fe/qa' }
             }
             steps {
-                deployToTomcat('13.201.47.166', 'tomcat', 'tomcat', 'http://13.201.47.166:8080/manager/text', '/boxfuse-sample-java-war-hello', 'QA')
+                deployToadmin('100.27.215.78', 'admin', 'admin', 'http://100.27.215.78:8080/manager/text', '/boxfuse-sample-java-war-hello', 'QA')
             }
         }
         stage("Deploy to Prod") {
@@ -49,7 +49,7 @@ pipeline {
                 input(message: "Do you want to proceed to PROD?", ok: "Proceed") // Approval step
 
                 // Deploy to PROD server after approval
-                deployToTomcat('65.2.187.108', 'tomcat', 'tomcat', 'http://65.2.187.108:8080/manager/text', '/boxfuse-sample-java-war-hello', 'Prod')
+                deployToadmin('44.223.68.158', 'admin', 'admin', 'http://44.223.68.158:8080/manager/text', '/boxfuse-sample-java-war-hello', 'Prod')
                 
                 // Send Slack notification
                 slackSend(channel: '7-30am-cloud-devops-batch', message: "Deployment to PROD has been approved by manager.")
@@ -63,7 +63,7 @@ def deployToTomcat(tomcatIP, username, password, tomcatURL, contextPath, environ
 
     // Deploy the WAR file using curl
     sh """
-        curl -v -u ${username}:${password} --upload-file ${warFileName} ${tomcatURL}/deploy?path=${contextPath}&update=true
+        curl -v -u ${username}:${password} --upload-file ${warFileName} ${adminURL}/deploy?path=${contextPath}&update=true
     """
     echo "Deployment to ${environment} server completed."
 }
